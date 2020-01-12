@@ -38,7 +38,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-
+            conda activate test
             pip install 'gym[atari]'
             conda install pytorch torchvision -c pytorch
             pip install -r requirements.txt
