@@ -20,7 +20,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run:
-          name: install anaconda
+          name: install dependencies
           command: |
             sudo apt-get install -y wget
             wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh -O anaconda3.sh
@@ -34,9 +34,25 @@ jobs:
             # Create test environment
             conda create -n test python=$PYTHON_VERSION
             conda activate test
-            pip install 'gym[atari]'
+
+            # PyTorch and scikit learn
             conda install pytorch torchvision -c pytorch
+            conda install scikit-learn
+
+            #gym atari
+            pip install 'gym[atari]'
+
+            # Baselines for Atari preprocessing
+            # Tensorflow is a dependency, but you don't need to install the GPU version
+            conda install tensorflow
+            pip install git+git://github.com/openai/baselines
+
+            # pytorch-a2c-ppo-acktr for RL utils
+            pip install git+git://github.com/ankeshanand/pytorch-a2c-ppo-acktr-gail
+
+            # Clone and install our package
             pip install -r requirements.txt
+            pip install git+git://github.com/mila-iqia/atari-representation-learning.git
 
       - save_cache:
           paths:
@@ -48,7 +64,8 @@ jobs:
       - run:
           name: run tests
           command: |
-            . venv/bin/activate
+            source /home/circleci/anaconda3/etc/profile.d/conda.sh
+            conda activate test
             conda --version
             python -m scripts.run_probe --method infonce-stdim --env-name PongNoFrameskip-v4
 
