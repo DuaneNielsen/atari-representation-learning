@@ -34,11 +34,6 @@ jobs:
             # Create test environment
             conda create -n test python=$PYTHON_VERSION
             conda activate test
-
-      - run:
-          name: install dependencies
-          command: |
-            conda activate test
             pip install 'gym[atari]'
             conda install pytorch torchvision -c pytorch
             pip install -r requirements.txt
