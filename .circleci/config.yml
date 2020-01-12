@@ -23,16 +23,21 @@ jobs:
           name: install anaconda
           command: |
             sudo apt-get install -y wget
-            wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh
-            bash Anaconda3-2019.10-Linux-x86_64.sh -b
-            export CONDA_ALWAYS_YES="true"
-            ~/anaconda3/bin/conda init bash
+            wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh -O anaconda3.sh
+            bash anaconda3.sh -b -p "$HOME"/anaconda3
+            source /home/circleci/anaconda3/etc/profile.d/conda.sh
+            conda activate base
+            # Conda configuration
+            conda config --set always_yes yes --set auto_update_conda false
+            # Update conda
+            conda update conda
+            # Create test environment
+            conda create -n test python=$PYTHON_VERSION
+            conda activate test
+
       - run:
           name: install dependencies
           command: |
-            export CONDA_ALWAYS_YES="true"
-            conda create --name atari-representation-learning
-            conda activate atari-representation-learning
 
             pip install 'gym[atari]'
             conda install pytorch torchvision -c pytorch
