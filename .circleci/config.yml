@@ -32,7 +32,7 @@ jobs:
             export CONDA_ALWAYS_YES="true"
             ~/anaconda3/bin/conda create --name atari-representation-learning
             ~/anaconda3/bin/conda init bash
-            conda activate atari-representation-learning
+            ~/anaconda3/bin/conda activate atari-representation-learning
 
             pip install 'gym[atari]'
             conda install pytorch torchvision -c pytorch
